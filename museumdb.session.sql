@@ -1,0 +1,1 @@
+select * from ART_OBJECT
