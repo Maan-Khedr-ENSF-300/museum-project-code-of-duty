@@ -7,11 +7,11 @@
             "previewLimit": 50,
             "server": "localhost",
             "port": 33060,
-            "askForPassword": true,
             "driver": "MySQL",
             "name": "museumdb",
             "database": "museum",
             "username": "root",
+            "password": "Haider1970",
             "connectionTimeout": 1000
         }
     ]
