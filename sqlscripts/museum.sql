@@ -261,3 +261,20 @@ CREATE TABLE ARCHIVED (
 	primary key (AId_no),
     foreign key (AId_no) references ART_OBJECT(Id_no) 
 );
+
+DROP TABLE IF EXISTS ACCOUNTS;
+CREATE TABLE ACCOUNTS (
+	Username			varchar(50)	not null DEFAULT 'None',
+	Pass				varchar(10)	not null DEFAULT 'None',
+	Roles		varchar(10)	not null,
+	primary key (username) 
+);
+INSERT INTO ACCOUNTS (Username, Pass, Roles)
+VALUES
+('ali.shah', 'AShah1987', 'admin'),
+('saba.Sadoughi', 'Ali<3', 'admin'),
+('isha.haider', '<salman>', 'admin'),
+('scott', 'scott12!', 'data entry'),
+('mohammad.malik', 'MMalik2001', 'data entry'),
+('abdullah.ahmed', 'AAhmed2000', 'data entry'),
+(DEFAULT, DEFAULT, 'guest');
