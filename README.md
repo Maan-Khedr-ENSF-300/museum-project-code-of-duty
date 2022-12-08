@@ -48,7 +48,9 @@ How to use and run the program
 
 Features beyond the minimum requirements
 
-        - Our program is more user friendly as it executes all required sql syntax given only the arbitrary user inputs
+        - Our program executes all required sql syntax given only the arbitrary user inputs as it accounts for the complete syntax on its own
+        -All bonus material except for query 1 is complete
+        
 ## Organization:
 - code folder: contains your main python application code
 - sql scripts folder: contains all sql scripts required (database creation and initialization, sql script with query tasks in the handout, etc...)
