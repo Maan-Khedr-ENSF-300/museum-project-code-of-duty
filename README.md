@@ -49,7 +49,7 @@ How to use and run the program
 Features beyond the minimum requirements
 
         - Our program executes all required sql syntax given only the arbitrary user inputs as it accounts for the complete syntax on its own
-        -All bonus material except for query 1 is complete
+        - Almost all bonus material has been completed 
         
 ## Organization:
 - code folder: contains your main python application code
