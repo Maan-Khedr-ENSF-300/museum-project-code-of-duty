@@ -116,10 +116,11 @@ while exit != '0':
 
                 elif choice == '5': # modify database
                     #admin can modify tuples, can modify constraints, can modify attributes
-                    table = input('Please enter the name of the table you would like to modify: ')
+                    
                     modify = input('Please select what you would like to do with a table:\n1. Modify Table Attributes\n2. Modify Table Constraints\n3. Modify Table Tuples\n0. Exit Database Management Menu\n')
                     while modify != '0':
-                        if modify == '1': # modify attribute in table
+                        if modify == '1': # FIXME: SABA modify attribute in table
+                            table = input('Please enter the name of the table you would like to modify the attributes of: ') #check if table exists
                             cur.execute(''' 
                                         ALTER TABLE %s
                                         ADD 
@@ -128,11 +129,13 @@ while exit != '0':
                             #attributes = 
                             break
 
-                        elif modify == '2': # modify constraint in table
+                        elif modify == '2': # FIXME: SABA modify constraint in table
+                            table = input('Please enter the name of the table you would like to modify the constraints of: ') #check if table exists
                             print('modify constraint in table')
                             break
                         
-                        elif modify == '3': # modify tuple in table
+                        elif modify == '3': # FIXME: ISHA modify tuple in table
+                            table = input('Please enter the name of the table you would like to modify the tuples of: ') #check if table exists
                             print('modify tuple in table')
                             break
                     
