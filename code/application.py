@@ -7,6 +7,15 @@ data = mysql.connector.connect(host='127.0.0.01',
                               password='Haider1970')
 cur = data.cursor()
 
+def list_tables():
+    print('List of All Tables in Museum DataFrame')
+    cur.execute('SHOW TABLES')
+    for table_name in cur:
+        table_name1 = str(table_name).replace('(','').replace(')','').replace('\'','').replace(',','')
+        print(table_name1)
+    table = input('Please enter the name of the table from the above list that you would like to modify: ')
+    return table
+
 def modify_users(user1, password, role, user2):
     if password == role == user2 == None:
         statement = f"DELETE FROM ACCOUNTS WHERE username = '{user1}';"
@@ -86,8 +95,8 @@ while exit != '0':
                     insert_user = print("Please complete the SQL INSERT statement:\n INSERT INTO ACCOUNTS VALUES (new username, new password, new role)")
                     user_info[0] = input('New Username: ')
                     user_info[1] = input('New Password: ')
-                    user_info[1] = input('New Role: ')
-                    modify_users(user_info[0], user_info[1], user_info[1], None)
+                    user_info[2] = input('New Role: ')
+                    modify_users(user_info[0], user_info[1], user_info[2], None)
                     print('User successfully inserted. Returning to Admin menu...')
                     choice = input('Please select an option:\n1. Add Users \n2. Edit Users\n3. Remove Users\n4. Modify Database\n0. Exit Admin Menu\n')
 
@@ -120,21 +129,33 @@ while exit != '0':
                     modify = input('Please select what you would like to do with a table:\n1. Modify Table Attributes\n2. Modify Table Constraints\n3. Modify Table Tuples\n0. Exit Database Management Menu\n')
                     while modify != '0':
                         if modify == '1': # FIXME: SABA modify attribute in table
+                            list_tables()
                             table = input('Please enter the name of the table you would like to modify the attributes of: ') #check if table exists
-                            cur.execute(''' 
-                                        ALTER TABLE %s
-                                        ADD 
-                                        ''')
-                        
-                            #attributes = 
+                            choice = input('Please enter an option: \n1.Add attribute \n2.Update attribute \n3.Delete attribute')
+                            
+                            if choice == '1': # add attribute 
+                                new_cul_name = input('Please enter the name of the new attribute you would like to add to {}\n'.format(table))
+                                cul_def = input('Please enter the definition or datatype of your new attribute:\n Example: NULL, NOT NULL, varchar(10)\n\n')
+                                cur.execute(''' ALTER TABLE %s ADD %s %s''',table, new_cul_name, cul_def)
+
+                            elif choice == '2': #Update attribute 
+                                new_cul_name = input('Please enter the name of the attribute you would like to update within {}\n'.format(table))
+                                cul_def = input('Please enter the definition or datatype of your new attribute:\n Example: NULL, NOT NULL, varchar(10)\n\n')
+                                cur.execute(''' ALTER TABLE %s MODIFY %s %s''',table, new_cul_name, cul_def)
+
+                            elif choice == '3': #Delete attribute 
+                                new_cul_name = input('Please enter the name of the attribute you would like to delete within {}\n'.format(table))
+                                cur.execute(''' ALTER TABLE %s DROP COLUMN %s''',table, new_cul_name)
                             break
 
                         elif modify == '2': # FIXME: SABA modify constraint in table
+                            list_tables()
                             table = input('Please enter the name of the table you would like to modify the constraints of: ') #check if table exists
                             print('modify constraint in table')
                             break
                         
                         elif modify == '3': # FIXME: ISHA modify tuple in table
+                            list_tables()
                             table = input('Please enter the name of the table you would like to modify the tuples of: ') #check if table exists
                             print('modify tuple in table')
                             break
