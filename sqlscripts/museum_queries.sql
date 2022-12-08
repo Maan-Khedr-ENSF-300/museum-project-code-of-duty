@@ -1,7 +1,7 @@
 
 -- 1) Show all tables and explain how they are related to one another (keys, triggers, etc.)
 SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE table_schema = 'museum'
-
+;
 -- 2) A basic retrieval query 
 -- Write a query to list all artist names, the year they were born, and where they are from.
 SELECT AName, DateBorn, Country_origin
