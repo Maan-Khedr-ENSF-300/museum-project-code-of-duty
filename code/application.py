@@ -7,15 +7,6 @@ data = mysql.connector.connect(host='127.0.0.01',
                               password='Haider1970')
 cur = data.cursor()
 
-def list_tables():
-    print('List of All Tables in Museum DataFrame')
-    cur.execute('SHOW TABLES')
-    for table_name in cur:
-        table_name1 = str(table_name).replace('(','').replace(')','').replace('\'','').replace(',','')
-        print(table_name1)
-    table = input('Please enter the name of the table from the above list that you would like to modify: ')
-    return table
-
 def modify_users(user1, password, role, user2):
     if password == role == user2 == None:
         statement = f"DELETE FROM ACCOUNTS WHERE username = '{user1}';"
@@ -65,6 +56,18 @@ def search_database(user_input):
         
         selection_string = "SELECT * FROM"
         user_input = int(input("Please enter the corresponding number for what you would like to be displayed from Museum database: \n 1 - Art Objects \n 2 - Artists \n 3 - Borrowed Objects \n 4 - Collections Borrowed From \n 5 - Permanent Collection \n 6 - Only Paintings \n 7 - Only Sculptures \n 8 - All Other Art Objects \n 9 - Exhibition Information \n 10 - Limited Artist Information \n 11 - Oldest to Latest Art Objects \n 12 - Art Objects from Same Origin as Artist Leonardo Da Vinci \n 13 - Paintings and Sculptures with Modern Style \n 0 - Quit \n"))
+
+def display_table(col, rows):
+    print(f"Current information in table\n")
+    for i in range(len(col)):
+        print(col[i], end='\t') #change this to trace length of string 
+    print()
+    print(120*'-')
+    for i in range(len(rows)):
+        for x in range(len(rows[i])):
+            print(rows[i][x], end='\t') #change this to trace length of string 
+        print()
+    print()
 
 # login
 cur.execute('use museum')
@@ -125,62 +128,78 @@ while exit != '0':
 
                 elif choice == '5': # modify database
                     #admin can modify tuples, can modify constraints, can modify attributes
-                    
                     modify = input('Please select what you would like to do with a table:\n1. Modify Table Attributes\n2. Modify Table Constraints\n3. Modify Table Tuples\n0. Exit Database Management Menu\n')
                     while modify != '0':
-                        if modify == '1': # FIXME: SABA modify attribute in table
-                            list_tables()
-                            table = input('Please enter the name of the table you would like to modify the attributes of: ') #check if table exists
-                            choice = input('Please enter an option: \n1.Add attribute \n2.Update attribute \n3.Delete attribute')
+                        if modify == '1': #modify attribute in table
+                            print('List of All Tables in Museum DataFrame')
+                            cur.execute('SHOW TABLES')
+                            for table_name in cur:
+                                table_name1 = str(table_name).replace('(','').replace(')','').replace('\'','').replace(',','')
+                                print(table_name1)
+                            table = input('Please enter the name of the table you would like to modify the attributes of: ')
+                            cur.execute(f"SELECT * FROM {table}")
+                            col_names = cur.column_names
+                            rows = cur.fetchall()
+                            display_table(col_names, rows)
+
+                            choice = input('Please enter an option: \n1.Add attribute \n2.Update attribute \n3.Delete attribute\n')
                             
                             if choice == '1': # add attribute 
                                 new_cul_name = input('Please enter the name of the new attribute you would like to add to {}\n'.format(table))
-                                cul_def = input('Please enter the definition or datatype of your new attribute:\n Example: NULL, NOT NULL, varchar(10)\n\n')
-                                cur.execute(''' ALTER TABLE %s ADD %s %s''',table, new_cul_name, cul_def)
-                                cur.commit()
+                                cul_def = input('Please enter the definition or datatype of your new attribute:\n Example: INT, VARCHAR(10)\n\n')
+                                cur.execute(f"ALTER TABLE {table} ADD {new_cul_name} {cul_def}")
+                                data.commit()
 
                             elif choice == '2': #Update attribute 
                                 new_cul_name = input('Please enter the name of the attribute you would like to update within {}\n'.format(table))
-                                cul_def = input('Please enter the definition or datatype of your new attribute:\n Example: NULL, NOT NULL, varchar(10)\n\n')
-                                cur.execute(''' ALTER TABLE %s MODIFY %s %s''',table, new_cul_name, cul_def)
-                                cur.commit()
+                                cul_def = input('Please enter the new datatype of your attribute:\n Example: INT, VARCHAR(10)\n\n')
+                                cur.execute(f"ALTER TABLE {table} MODIFY {new_cul_name} {cul_def}")
+                                data.commit()
 
                             elif choice == '3': #Delete attribute 
                                 new_cul_name = input('Please enter the name of the attribute you would like to delete within {}\n'.format(table))
-                                cur.execute(''' ALTER TABLE %s DROP COLUMN %s''',table, new_cul_name)
-                                cur.commit()
+                                cur.execute(f"ALTER TABLE {table} DROP COLUMN {new_cul_name}")
+                                data.commit()
 
-                            break
-
-                        elif modify == '2': # FIXME: SABA modify constraint in table
-                            list_tables()
-                            table = input('Please enter the name of the table you would like to modify the constraints of: ') #check if table exists
-                            choice = input('Please enter the number of your modification choice:\n1.Rename a constraint\n2.Add a unique constraint\n3.Add a primary constraint\n4.Delete a constraint')
+                        elif modify == '2': #modify constraint in table
+                            print('List of All Tables in Museum DataFrame')
+                            cur.execute('SHOW TABLES')
+                            for table_name in cur:
+                                table_name1 = str(table_name).replace('(','').replace(')','').replace('\'','').replace(',','')
+                                print(table_name1)
+                            table = input('Please enter the name of the table you would like to modify the constraints of: ')
+                            cur.execute(f"SELECT * FROM {table}")
+                            col_names = cur.column_names
+                            rows = cur.fetchall()
+                            display_table(col_names, rows)
+                            
+                            choice = input('Please enter the number of your modification choice:\n1.Rename a constraint\n2.Add a unique constraint\n3.Add a primary constraint\n4.Delete a constraint\n')
                             
                             if choice == '1': # rename constraint
                                 old_const = input('Please enter the name of the constraint you would like to change: ')
                                 new_const = input('Please enter your new constraint name: ')
-                                cur.execute(''' ALTER TABLE %s, RENAME CONSTRAINT %s TO %s ''', table, old_const, new_const)
-                                cur.commit()
+                                cur.execute(f"ALTER TABLE {table} RENAME CONSTRAINT {old_const} TO {new_const}")
+                                data.commit()
+
                             elif choice == '2': # Add a primary constraint 
                                 prim_key = input('Please enter the name of the new primary key: ')
                                 attr_prim = input('Please enter the name of the attribute you would like to add this primary key to: ')
-                                cur.execute('''ALTER TABLE %s ADD CONSTRAINT %s PRIMARY KEY (%s)''', table, prim_key, attr_prim)                            
+                                cur.execute(f"ALTER TABLE {table} ADD CONSTRAINT {prim_key} PRIMARY KEY {attr_prim}")
+                                data.commit()                          
 
                             elif choice == '3': # Add a unique constraint 
                                 prim_key = input('Please enter the name of the new unique key: ')
                                 attr_prim = input('Please enter the name of the attribute you would like to add this unique key to: ')
-                                cur.execute('''ALTER TABLE %s ADD CONSTRAINT %s UNIQUE KEY (%s)''', table, prim_key, attr_prim) 
-                                cur.commit()
+                                cur.execute(f"ALTER TABLE {table} ADD CONSTRAINT {prim_key} UNIQUE KEY {attr_prim}")
+                                data.commit()
 
                             elif choice == '4': # Delete a constraint
                                 del_const = input('Please enter the name of the constraint you would like to delete: ')
-                                cur.execute('''ALTER TABLE %s DROP CONSTRAINT %s ''', table, del_const)
+                                cur.execute(f"ALTER TABLE {table} DROP CONSTRAINT {del_const}")
+                                data.commit()
 
-                            break
-                        
                         elif modify == '3': # FIXME: ISHA modify tuple in table
-                            list_tables()
+                            #list_tables()
                             table = input('Please enter the name of the table you would like to modify the tuples of: ') #check if table exists
                             print('modify tuple in table')
                             break
