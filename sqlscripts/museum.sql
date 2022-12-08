@@ -272,8 +272,8 @@ CREATE TABLE ACCOUNTS (
 INSERT INTO ACCOUNTS (Username, Pass, Roles)
 VALUES
 ('ali.shah', 'AShah1987', 'admin'),
-('saba.Sadoughi', 'Ali<3', 'admin'),
+('saba.sadoughi', 'Ali<3', 'admin'),
 ('isha.haider', '<salman>', 'admin'),
 ('scott', 'scott12!', 'data entry'),
 ('mohammad.malik', 'MMalik2001', 'data entry'),
-('abdullah.ahmed', 'AAhmed2000', 'data entry'),
+('abdullah.ahmed', 'AAhmed2000', 'data entry');
