@@ -160,6 +160,8 @@ while exit != '0':
                                 new_cul_name = input('Please enter the name of the attribute you would like to delete within {}\n'.format(table))
                                 cur.execute(f"ALTER TABLE {table} DROP COLUMN {new_cul_name}")
                                 data.commit()
+                            
+                            modify = input('Please select what you would like to do with a table:\n1. Modify Table Attributes\n2. Modify Table Constraints\n3. Modify Table Tuples\n0. Exit Database Management Menu\n')
 
                         elif modify == '2': #modify constraint in table
                             print('List of All Tables in Museum DataFrame')
@@ -197,25 +199,110 @@ while exit != '0':
                                 del_const = input('Please enter the name of the constraint you would like to delete: ')
                                 cur.execute(f"ALTER TABLE {table} DROP CONSTRAINT {del_const}")
                                 data.commit()
+                            
+                            modify = input('Please select what you would like to do with a table:\n1. Modify Table Attributes\n2. Modify Table Constraints\n3. Modify Table Tuples\n0. Exit Database Management Menu\n')
 
-                        elif modify == '3': # FIXME: ISHA modify tuple in table
-                            #list_tables()
-                            table = input('Please enter the name of the table you would like to modify the tuples of: ') #check if table exists
-                            print('modify tuple in table')
-                            break
-                    
+                        elif modify == '3': #modify tuple in table
+                            print('List of All Tables in Museum DataFrame')
+                            cur.execute('SHOW TABLES')
+                            for table_name in cur:
+                                table_name1 = str(table_name).replace('(','').replace(')','').replace('\'','').replace(',','')
+                                print(table_name1)
+                            table = input('Please enter the name of the table from the above list that you would like to modify: ')
+                            cur.execute(f"SELECT * FROM {table}")
+                            col_names = cur.column_names
+                            rows = cur.fetchall()
+                            display_table(col_names, rows)
+                            
+                            tuple_option = input('Please select what to do with the tuple:\n1. Add a tuple\n2. Modify existing tuple\n3. Delete a tuple\n')
+                            if tuple_option == '1': #add tuple
+                                insert_table = (f"INSERT INTO {table} (")
+                                for attribute in col_names:
+                                    insert_table += f'{attribute},'
+                                insert_table = insert_table[:-1]
+                                insert_table += ') VALUES'
+                                
+                                table_data = input('Please enter the following attributes, separated by a comma WITHOUT any spaces between commas {}: '.format(col_names))
+                                table_data = tuple((str(x) for x in table_data.split(",")))
+                                
+                                insert_table1 = '('+','.join(table_data) + ')'
+                                insert_table1 = insert_table1.replace(",","','").replace("(","('").replace(")","')")
+                                insert_table += insert_table1
+                                
+                                cur.execute(insert_table)
+                                data.commit()
+                                
+                            elif tuple_option == '2': #update tuple
+                                update_tuple = input('Please enter the UPDATE command using the following syntax: UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition\nPlease also be considerate of the following rules:\n- Make sure that the condition references the primary key of the table.\n- Put all variables in quotation marks.\n')
+                                cur.execute(update_tuple)
+                                data.commit()
+                                
+                            elif tuple_option == '3': #delete tuple
+                                #DELETE FROM table_name WHERE condition;
+                                delete_tuple = input('Please enter the DELETE command using the following syntax: DELETE FROM table_name WHERE condition\nPlease also be considerate of the following rules:\n- Make sure that the condition references the primary key of the table.\n- Put all variables in quotation marks.\n')
+                                cur.execute(delete_tuple)
+                                data.commit()
+                                
+                            else:
+                                print('Incorrect command entered.')
+                            
+                            modify = input('Please select what you would like to do with a table:\n1. Modify Table Attributes\n2. Modify Table Constraints\n3. Modify Table Tuples\n0. Exit Database Management Menu\n')
+                    choice = input('Please select an option:\n1. Add Users \n2. Edit Users\n3. Block Users\n4. Modify Database\n0. Exit Admin Menu\n')
+
         elif (username, password, 'data entry') in ACCOUNTS: # if user is data entry type
-            choice = input('Please select an option:\n1. Browse Database\n5. Modify Database\n0. Exit Data Entry Menu\n')
+            choice = input('Please select an option:\n1. Browse Database\n2. Modify Database Tuples\n0. Exit Data Entry Menu\n')
             while choice != '0':
                 if choice == '1': #search database
                     selection_string = ""
                     user_input = int(input("Please enter the corresponding number for what you would like to be displayed from Museum database: \n 1 - Art Objects \n 2 - Artists \n 3 - Borrowed Objects \n 4 - Collections Borrowed From \n 5 - Permanent Collection \n 6 - Only Paintings \n 7 - Only Sculptures \n 8 - All Other Art Objects \n 9 - Exhibition Information \n 10 - Limited Artist Information \n 11 - Oldest to Latest Art Objects \n 12 - Art Objects from Same Origin as Artist Leonardo Da Vinci \n 13 - Paintings and Sculptures with Modern Style \n 0 - Quit \n"))
                     search_database(user_input)
-                    choice = input('Please select an option:\n1. Browse Database\n5. Modify Database\n0. Exit Data Entry Menu\n')
+                    choice = input('Please select an option:\n1. Browse Database\n2. Modify Database Tuples\n0. Exit Data Entry Menu\n')
                 
                 elif choice == '2': #modify database (can only insert, delete, or update tuples)
-                    break
-        
+                    print('List of All Tables in Museum DataFrame')
+                    cur.execute('SHOW TABLES')
+                    for table_name in cur:
+                        table_name1 = str(table_name).replace('(','').replace(')','').replace('\'','').replace(',','')
+                        print(table_name1)
+                    table = input('Please enter the name of the table from the above list that you would like to modify: ')
+                    cur.execute(f"SELECT * FROM {table}")
+                    col_names = cur.column_names
+                    rows = cur.fetchall()
+                    display_table(col_names, rows)
+                    
+                    tuple_option = input('Please select what to do with the tuple:\n1. Add a tuple\n2. Modify existing tuple\n3. Delete a tuple\n')
+                    if tuple_option == '1': #add tuple
+                        insert_table = (f"INSERT INTO {table} (")
+                        for attribute in col_names:
+                            insert_table += f'{attribute},'
+                        insert_table = insert_table[:-1]
+                        insert_table += ') VALUES'
+                        
+                        table_data = input('Please enter the following attributes, separated by a comma WITHOUT any spaces between commas {}: '.format(col_names))
+                        table_data = tuple((str(x) for x in table_data.split(",")))
+                        
+                        insert_table1 = '('+','.join(table_data) + ')'
+                        insert_table1 = insert_table1.replace(",","','").replace("(","('").replace(")","')")
+                        insert_table += insert_table1
+                        
+                        cur.execute(insert_table)
+                        data.commit()
+                        
+                    elif tuple_option == '2': #update tuple
+                        update_tuple = input('Please enter the UPDATE command using the following syntax: UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition\nPlease also be considerate of the following rules:\n- Make sure that the condition references the primary key of the table.\n- Put all variables in quotation marks.\n')
+                        cur.execute(update_tuple)
+                        data.commit()
+                        
+                    elif tuple_option == '3': #delete tuple
+                        delete_tuple = input('Please enter the DELETE command using the following syntax: DELETE FROM table_name WHERE condition\nPlease also be considerate of the following rules:\n- Make sure that the condition references the primary key of the table.\n- Put all variables in quotation marks.\n')
+                        cur.execute(delete_tuple)
+                        data.commit()
+                        
+                    else:
+                        print('Incorrect command entered.')
+                    
+                    choice = input('Please select an option:\n1. Browse Database\n2. Modify Database Tuples\n0. Exit Data Entry Menu\n')
+
         else: # user is not valid
             print('Username or password are incorrect. You will be redirected to the Main Page.')
             continue
