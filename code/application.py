@@ -137,21 +137,46 @@ while exit != '0':
                                 new_cul_name = input('Please enter the name of the new attribute you would like to add to {}\n'.format(table))
                                 cul_def = input('Please enter the definition or datatype of your new attribute:\n Example: NULL, NOT NULL, varchar(10)\n\n')
                                 cur.execute(''' ALTER TABLE %s ADD %s %s''',table, new_cul_name, cul_def)
+                                cur.commit()
 
                             elif choice == '2': #Update attribute 
                                 new_cul_name = input('Please enter the name of the attribute you would like to update within {}\n'.format(table))
                                 cul_def = input('Please enter the definition or datatype of your new attribute:\n Example: NULL, NOT NULL, varchar(10)\n\n')
                                 cur.execute(''' ALTER TABLE %s MODIFY %s %s''',table, new_cul_name, cul_def)
+                                cur.commit()
 
                             elif choice == '3': #Delete attribute 
                                 new_cul_name = input('Please enter the name of the attribute you would like to delete within {}\n'.format(table))
                                 cur.execute(''' ALTER TABLE %s DROP COLUMN %s''',table, new_cul_name)
+                                cur.commit()
+
                             break
 
                         elif modify == '2': # FIXME: SABA modify constraint in table
                             list_tables()
                             table = input('Please enter the name of the table you would like to modify the constraints of: ') #check if table exists
-                            print('modify constraint in table')
+                            choice = input('Please enter the number of your modification choice:\n1.Rename a constraint\n2.Add a unique constraint\n3.Add a primary constraint\n4.Delete a constraint')
+                            
+                            if choice == '1': # rename constraint
+                                old_const = input('Please enter the name of the constraint you would like to change: ')
+                                new_const = input('Please enter your new constraint name: ')
+                                cur.execute(''' ALTER TABLE %s, RENAME CONSTRAINT %s TO %s ''', table, old_const, new_const)
+                                cur.commit()
+                            elif choice == '2': # Add a primary constraint 
+                                prim_key = input('Please enter the name of the new primary key: ')
+                                attr_prim = input('Please enter the name of the attribute you would like to add this primary key to: ')
+                                cur.execute('''ALTER TABLE %s ADD CONSTRAINT %s PRIMARY KEY (%s)''', table, prim_key, attr_prim)                            
+
+                            elif choice == '3': # Add a unique constraint 
+                                prim_key = input('Please enter the name of the new unique key: ')
+                                attr_prim = input('Please enter the name of the attribute you would like to add this unique key to: ')
+                                cur.execute('''ALTER TABLE %s ADD CONSTRAINT %s UNIQUE KEY (%s)''', table, prim_key, attr_prim) 
+                                cur.commit()
+
+                            elif choice == '4': # Delete a constraint
+                                del_const = input('Please enter the name of the constraint you would like to delete: ')
+                                cur.execute('''ALTER TABLE %s DROP CONSTRAINT %s ''', table, del_const)
+
                             break
                         
                         elif modify == '3': # FIXME: ISHA modify tuple in table
