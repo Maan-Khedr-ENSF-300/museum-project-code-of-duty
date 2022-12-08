@@ -95,7 +95,6 @@ while exit != '0':
         username = input('Username: ')
         password = input('Password: ')
 
-        # simultaneously check if user exists and their account type
         if (username, password, 'admin') in ACCOUNTS: # if user is admin
             user_info = ['','','','']
             choice = input('Please select an option:\n1. Add Users \n2. Edit Users\n3. Remove Users\n4. Browse Database\n5. Modify Database\n0. Exit Admin Menu\n')
@@ -146,6 +145,9 @@ while exit != '0':
                             cur.execute(f"SELECT * FROM {table}")
                             col_names = cur.column_names
                             rows = cur.fetchall()
+                            if table == 'ACCOUNTS':
+                                print('You do not have the permission to view this table. Redirecting to Admin Menu...')
+                                break
                             display_table(col_names, rows)
 
                             choice = input('Please enter an option: \n1.Add attribute \n2.Update attribute \n3.Delete attribute\n')
@@ -155,17 +157,20 @@ while exit != '0':
                                 cul_def = input('Please enter the definition or datatype of your new attribute:\n Example: INT, VARCHAR(10)\n\n')
                                 cur.execute(f"ALTER TABLE {table} ADD {new_cul_name} {cul_def}")
                                 data.commit()
+                                print('Changes successfully made. Returning to Database Management Menu...')
 
                             elif choice == '2': #Update attribute 
                                 new_cul_name = input('Please enter the name of the attribute you would like to update within {}\n'.format(table))
                                 cul_def = input('Please enter the new datatype of your attribute:\n Example: INT, VARCHAR(10)\n\n')
                                 cur.execute(f"ALTER TABLE {table} MODIFY {new_cul_name} {cul_def}")
                                 data.commit()
+                                print('Changes successfully made. Returning to Database Management Menu...')
 
                             elif choice == '3': #Delete attribute 
                                 new_cul_name = input('Please enter the name of the attribute you would like to delete within {}\n'.format(table))
                                 cur.execute(f"ALTER TABLE {table} DROP COLUMN {new_cul_name}")
                                 data.commit()
+                                print('Changes successfully made. Returning to Database Management Menu...')
                             
                             modify = input('Please select what you would like to do with a table:\n1. Modify Table Attributes\n2. Modify Table Constraints\n3. Modify Table Tuples\n0. Exit Database Management Menu\n')
 
@@ -179,6 +184,9 @@ while exit != '0':
                             cur.execute(f"SELECT * FROM {table}")
                             col_names = cur.column_names
                             rows = cur.fetchall()
+                            if table == 'ACCOUNTS':
+                                print('You do not have the permission to view this table. Redirecting to Admin Menu...')
+                                break
                             display_table(col_names, rows)
                             
                             choice = input('Please enter the number of your modification choice:\n1.Rename a constraint\n2.Add a unique constraint\n3.Add a primary constraint\n4.Delete a constraint\n')
@@ -188,12 +196,14 @@ while exit != '0':
                                 new_const = input('Please enter your new constraint name: ')
                                 cur.execute(f"ALTER TABLE {table} RENAME CONSTRAINT {old_const} TO {new_const}")
                                 data.commit()
+                                print('Changes successfully made. Returning to Database Management Menu...')
 
                             elif choice == '2': # Add a primary constraint 
                                 prim_key = input('Please enter the name of the new primary key: ')
                                 attr_prim = input('Please enter the name of the attribute you would like to add this primary key to: ')
                                 cur.execute(f"ALTER TABLE {table} ADD CONSTRAINT {prim_key} PRIMARY KEY {attr_prim}")
-                                data.commit()                          
+                                data.commit() 
+                                print('Changes successfully made. Returning to Database Management Menu...')                         
 
                             elif choice == '3': # Add a unique constraint 
                                 prim_key = input('Please enter the name of the new unique key: ')
@@ -205,6 +215,7 @@ while exit != '0':
                                 del_const = input('Please enter the name of the constraint you would like to delete: ')
                                 cur.execute(f"ALTER TABLE {table} DROP CONSTRAINT {del_const}")
                                 data.commit()
+                                print('Changes successfully made. Returning to Database Management Menu...')
                             
                             modify = input('Please select what you would like to do with a table:\n1. Modify Table Attributes\n2. Modify Table Constraints\n3. Modify Table Tuples\n0. Exit Database Management Menu\n')
 
@@ -218,6 +229,9 @@ while exit != '0':
                             cur.execute(f"SELECT * FROM {table}")
                             col_names = cur.column_names
                             rows = cur.fetchall()
+                            if table == 'ACCOUNTS':
+                                print('You do not have the permission to view this table. Redirecting to Admin Menu...')
+                                break
                             display_table(col_names, rows)
                             
                             tuple_option = input('Please select what to do with the tuple:\n1. Add a tuple\n2. Modify existing tuple\n3. Delete a tuple\n')
@@ -237,17 +251,19 @@ while exit != '0':
                                 
                                 cur.execute(insert_table)
                                 data.commit()
+                                print('Changes successfully made. Returning to Database Management Menu...')
                                 
                             elif tuple_option == '2': #update tuple
                                 update_tuple = input('Please enter the UPDATE command using the following syntax: UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition\nPlease also be considerate of the following rules:\n- Make sure that the condition references the primary key of the table.\n- Put all variables in quotation marks.\n')
                                 cur.execute(update_tuple)
                                 data.commit()
+                                print('Changes successfully made. Returning to Database Management Menu...')
                                 
                             elif tuple_option == '3': #delete tuple
-                                #DELETE FROM table_name WHERE condition;
                                 delete_tuple = input('Please enter the DELETE command using the following syntax: DELETE FROM table_name WHERE condition\nPlease also be considerate of the following rules:\n- Make sure that the condition references the primary key of the table.\n- Put all variables in quotation marks.\n')
                                 cur.execute(delete_tuple)
                                 data.commit()
+                                print('Changes successfully made. Returning to Database Management Menu...')
                                 
                             else:
                                 print('Incorrect command entered.')
@@ -274,6 +290,9 @@ while exit != '0':
                     cur.execute(f"SELECT * FROM {table}")
                     col_names = cur.column_names
                     rows = cur.fetchall()
+                    if table == 'ACCOUNTS':
+                                print('You do not have the permission to view this table. Redirecting to Data Entry Menu...')
+                                break
                     display_table(col_names, rows)
                     
                     tuple_option = input('Please select what to do with the tuple:\n1. Add a tuple\n2. Modify existing tuple\n3. Delete a tuple\n')
@@ -293,16 +312,19 @@ while exit != '0':
                         
                         cur.execute(insert_table)
                         data.commit()
+                        print('Changes successfully made. Returning to Data Entry User Menu...')
                         
                     elif tuple_option == '2': #update tuple
                         update_tuple = input('Please enter the UPDATE command using the following syntax: UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition\nPlease also be considerate of the following rules:\n- Make sure that the condition references the primary key of the table.\n- Put all variables in quotation marks.\n')
                         cur.execute(update_tuple)
                         data.commit()
+                        print('Changes successfully made. Returning to Data Entry User Menu...')
                         
                     elif tuple_option == '3': #delete tuple
                         delete_tuple = input('Please enter the DELETE command using the following syntax: DELETE FROM table_name WHERE condition\nPlease also be considerate of the following rules:\n- Make sure that the condition references the primary key of the table.\n- Put all variables in quotation marks.\n')
                         cur.execute(delete_tuple)
                         data.commit()
+                        print('Changes successfully made. Returning to Data Entry User Menu...')
                         
                     else:
                         print('Incorrect command entered.')
