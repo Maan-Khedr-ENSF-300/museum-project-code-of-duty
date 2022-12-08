@@ -1,14 +1,6 @@
 
 -- 1) Show all tables and explain how they are related to one another (keys, triggers, etc.)
-SELECT * FROM MUSEUM.ARTIST;
-SELECT * FROM MUSEUM.ART_OBJECT;
-SELECT * FROM MUSEUM.BORROWED;
-SELECT * FROM MUSEUM.COLLECTION;
-SELECT * FROM MUSEUM.EXHIBITION;
-SELECT * FROM MUSEUM.OTHER;
-SELECT * FROM MUSEUM.PAINTING;
-SELECT * FROM MUSEUM.PERMANENT_COLLECTION;
-SELECT * FROM MUSEUM.SCULPTURE;
+SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE table_schema = 'museum'
 
 -- 2) A basic retrieval query 
 -- Write a query to list all artist names, the year they were born, and where they are from.
