@@ -277,4 +277,3 @@ VALUES
 ('scott', 'scott12!', 'data entry'),
 ('mohammad.malik', 'MMalik2001', 'data entry'),
 ('abdullah.ahmed', 'AAhmed2000', 'data entry'),
-(DEFAULT, DEFAULT, 'guest');
