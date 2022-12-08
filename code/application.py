@@ -1,10 +1,16 @@
 
 import mysql.connector 
-data = mysql.connector.connect(host='127.0.0.01',
-                              port = 3306,
-                              user='root',
+user = input('please enter a username for SQL connection (ex: root): ')
+password = input("please enter your connection's password: ")
+port = input('please enter your port number (ex: 3306): ')
+host = input('please enter your host number (ex: 127.0.0.01): ')
+
+data = mysql.connector.connect(host=f'{host}',
+                              port = port,
+                              user=f'{user}',
                               database = 'museum',
-                              password='Haider1970')
+                              password=f'{password}')
+
 cur = data.cursor()
 
 def modify_users(user1, password, role, user2):
